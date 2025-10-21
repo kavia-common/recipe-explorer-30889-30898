@@ -41,7 +41,7 @@ export default function Navbar({ initialQuery = "", onSearch }) {
           aria-label="Recipe search"
         >
           <div className="search-input" aria-live="polite">
-            <label htmlFor={inputId} className="visually-hidden" aria-hidden="true">
+            <label htmlFor={inputId} className="visually-hidden">
               Search recipes
             </label>
             <span className="search-icon" aria-hidden="true">🔍</span>
@@ -51,7 +51,6 @@ export default function Navbar({ initialQuery = "", onSearch }) {
               className="input"
               type="search"
               placeholder="Search recipes, ingredients…"
-              aria-label="Search recipes"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               // Ensure IME/virtual keyboards can confirm without submitting prematurely
