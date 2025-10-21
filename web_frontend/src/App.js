@@ -1,48 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React, { useMemo, useState, useEffect } from 'react';
 import './App.css';
+import './styles/theme.css';
+import Layout from './components/Layout';
+import { categories as allCategories, recipes as allRecipes, filterRecipes } from './data/recipes';
+import { AppRoutes } from './routes';
 
 // PUBLIC_INTERFACE
 function App() {
-  const [theme, setTheme] = useState('light');
+  /**
+   * Root application: manages search and category filter state,
+   * applies Ocean Professional theme, and renders routes within layout.
+   */
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('All');
 
-  // Effect to apply theme to document element
+  // Apply base theme on mount
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    document.documentElement.style.background = 'var(--color-bg)';
+  }, []);
 
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  const filtered = useMemo(() => filterRecipes(allRecipes, query, category), [query, category]);
+
+  const handleOpenDetail = (recipe) => {
+    window.location.hash = `#/recipe/${recipe.id}`;
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout
+      categories={allCategories}
+      activeCategory={category}
+      onCategoryChange={setCategory}
+      query={query}
+      onSearch={setQuery}
+    >
+      <AppRoutes filtered={filtered} onOpenDetail={handleOpenDetail} />
+    </Layout>
   );
 }
 
