@@ -3,8 +3,8 @@ import RecipeCard from "./RecipeCard";
 
 // PUBLIC_INTERFACE
 export default function RecipeGrid({ recipes, onOpen }) {
-  /** Displays a responsive grid of recipe cards. */
-  if (!recipes || recipes.length === 0) {
+  /** Displays a responsive grid of recipe cards with defensive checks. */
+  if (!Array.isArray(recipes) || recipes.length === 0) {
     return (
       <div className="card" style={{ padding: 18 }}>
         <strong>No recipes found.</strong>
@@ -17,8 +17,8 @@ export default function RecipeGrid({ recipes, onOpen }) {
 
   return (
     <section className="grid" aria-label="Recipe results">
-      {recipes.map((r) => (
-        <RecipeCard key={r.id} recipe={r} onClick={onOpen} />
+      {recipes.filter(Boolean).map((r) => (
+        <RecipeCard key={String(r.id ?? Math.random())} recipe={r} onClick={onOpen} />
       ))}
     </section>
   );
